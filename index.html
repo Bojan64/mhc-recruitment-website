@@ -97,33 +97,22 @@ button{font-family:inherit;cursor:pointer;border:none;background:none}
 .pc-refs svg{width:16px;height:16px;fill:var(--gold);flex:none}
 .pc-note{text-align:center;color:rgba(255,255,255,.4);font-size:12px;margin-top:16px}
 
-/* NOVI VIDEO KONTEJNERI */
-.actual-video-container {
-  margin-top: 14px;
-  background: #162040;
-  border-radius: 10px;
-  overflow: hidden;
-  border: 1px solid var(--line);
-}
-.actual-video-container video {
-  width: 100%;
-  display: block;
-  outline: none;
-}
-.actual-video-label {
-  padding: 10px 14px;
-  background: #fff;
-  border-top: 1px solid #eee9dc;
-}
-.actual-video-label p:first-child {
-  font-weight: 800;
-  font-size: 13px;
-  color: var(--navy);
-}
-.actual-video-label p:last-child {
-  font-size: 11px;
-  color: var(--muted);
-}
+/* ==================== VIDEO LIGHTBOX ==================== */
+.video-thumb{cursor:pointer}
+.lightbox{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;
+  background:rgba(15,23,48,.92);padding:20px;opacity:0;pointer-events:none;transition:opacity .3s}
+.lightbox.open{opacity:1;pointer-events:auto}
+.lightbox-inner{width:100%;max-width:900px;position:relative}
+.lightbox-inner video{width:100%;max-height:78vh;display:block;border-radius:12px;background:#000;
+  box-shadow:0 40px 80px -30px rgba(0,0,0,.7)}
+.lightbox-title{color:#fff;font-family:'Cormorant Garamond',serif;font-size:22px;margin-bottom:12px;
+  display:flex;align-items:center;gap:10px}
+.lightbox-title::before{content:'';width:28px;height:2px;background:var(--gold)}
+.lightbox-close{position:absolute;top:-14px;right:-6px;width:40px;height:40px;border-radius:50%;
+  background:var(--gold);color:#fff;font-size:18px;font-weight:800;display:flex;align-items:center;
+  justify-content:center;transition:.2s;z-index:2}
+.lightbox-close:hover{background:var(--gold-dark);transform:scale(1.06)}
+@media(max-width:560px){.lightbox-close{top:-50px;right:0}}
 
 /* ==================== SEKCIJE ==================== */
 .section{padding:88px 0}
@@ -346,38 +335,19 @@ textarea.field{resize:vertical}
               <div class="pc-stat"><p>Jeziki</p><p>Angleščina · C1</p></div>
             </div>
             
-            <div class="video-thumb">
+            <div class="video-thumb" role="button" tabindex="0" aria-label="Predvajaj video predstavitev"
+                 onclick="openVideo('/video-predstavitev.mp4','Video predstavitev')"
+                 onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openVideo('/video-predstavitev.mp4','Video predstavitev')}">
               <img src="https://images.unsplash.com/photo-1583394293214-28ded15ee548?auto=format&fit=crop&w=700&q=65" alt="Natakar" loading="lazy">
               <div class="play-dot"><svg viewBox="0 0 20 20"><path d="M6 4l10 6-10 6V4z"/></svg></div>
-              <div><p class="vt-title">Video predstavitev</p><p class="vt-sub">3 min · osebna predstavitev v angleščini</p></div>
+              <div><p class="vt-title">Video predstavitev</p><p class="vt-sub">▶ Klikni za ogled</p></div>
             </div>
-            <div class="video-thumb">
+            <div class="video-thumb" role="button" tabindex="0" aria-label="Predvajaj Skills Video"
+                 onclick="openVideo('/skills-video.mp4','Skills Video — strežba')"
+                 onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openVideo('/skills-video.mp4','Skills Video — strežba')}">
               <img src="https://images.unsplash.com/photo-1621341616519-ff40c652d43e?auto=format&fit=crop&w=700&q=65" alt="Strežba vina" loading="lazy">
               <div class="play-dot"><svg viewBox="0 0 20 20"><path d="M6 4l10 6-10 6V4z"/></svg></div>
-              <div><p class="vt-title">Skills Video</p><p class="vt-sub">2 min · strežba vina in priprava mize</p></div>
-            </div>
-
-            <!-- INTEGRACIJA PREJETIH MULTIMEDIJSKIH DATOTEK -->
-            <div class="actual-video-container">
-              <video controls>
-                <source src="VID-20260709-WA0018.mp4" type="video/mp4">
-                Vaš brskalnik ne podpira predvajanja videa.
-              </video>
-              <div class="actual-video-label">
-                <p>Dodatna video predstavitev (1)</p>
-                <p>Naložena datoteka: VID-20260709-WA0018.mp4</p>
-              </div>
-            </div>
-
-            <div class="actual-video-container">
-              <video controls>
-                <source src="VID-20260709-WA0017.mp4" type="video/mp4">
-                Vaš brskalnik ne podpira predvajanja videa.
-              </video>
-              <div class="actual-video-label">
-                <p>Dodatna video predstavitev (2)</p>
-                <p>Naložena datoteka: VID-20260709-WA0017.mp4</p>
-              </div>
+              <div><p class="vt-title">Skills Video</p><p class="vt-sub">▶ Klikni za ogled</p></div>
             </div>
 
             <div class="pc-refs">
@@ -712,6 +682,39 @@ async function submitInquiry(){
     document.getElementById('formError').textContent = "Napaka pri pošiljanju.";
   }
 }
+</script>
+<!-- VIDEO LIGHTBOX -->
+<div class="lightbox" id="videoLightbox" onclick="if(event.target===this)closeVideo()">
+  <div class="lightbox-inner">
+    <button class="lightbox-close" onclick="closeVideo()" aria-label="Zapri video">✕</button>
+    <p class="lightbox-title" id="lightboxTitle"></p>
+    <video id="lightboxVideo" controls playsinline preload="none"></video>
+  </div>
+</div>
+
+<script>
+/* ---------- video lightbox ---------- */
+function openVideo(src, title){
+  var lb = document.getElementById('videoLightbox');
+  var v  = document.getElementById('lightboxVideo');
+  document.getElementById('lightboxTitle').textContent = title;
+  v.src = src;
+  lb.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  v.play().catch(function(){ /* uporabnik lahko sproži ročno */ });
+}
+function closeVideo(){
+  var lb = document.getElementById('videoLightbox');
+  var v  = document.getElementById('lightboxVideo');
+  v.pause();
+  v.removeAttribute('src');
+  v.load();
+  lb.classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', function(e){
+  if(e.key === 'Escape') closeVideo();
+});
 </script>
 </body>
 </html>
