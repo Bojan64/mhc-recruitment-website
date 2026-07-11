@@ -18,7 +18,7 @@
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{font-family:'Nunito',sans-serif;color:var(--navy);background:var(--cream);line-height:1.5;-webkit-font-smoothing:antialiased}
+body{font-family:'Nunito',sans-serif;color:var(--navy);background:var(--cream);line-height:1.5;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility;-webkit-text-size-adjust:100%;overflow-x:hidden}
 img{max-width:100%}
 a{text-decoration:none;color:inherit}
 button{font-family:inherit;cursor:pointer;border:none;background:none}
@@ -112,6 +112,54 @@ button{font-family:inherit;cursor:pointer;border:none;background:none}
   background:var(--gold);color:#fff;font-size:18px;font-weight:800;display:flex;align-items:center;
   justify-content:center;transition:.2s;z-index:2}
 .lightbox-close:hover{background:var(--gold-dark);transform:scale(1.06)}
+/* ==================== MOBILNI POPRAVKI ==================== */
+@media(max-width:768px){
+  /* kartica kandidata: brez nagiba — na ozkem zaslonu deluje zamaknjeno */
+  .profile-card{transform:none !important;padding:22px;border-radius:14px}
+  .profile-card:hover{transform:none}
+  .pc-head{flex-direction:column;align-items:flex-start;gap:10px}
+  .pc-title{font-size:22px;line-height:1.2}
+  .badge{align-self:flex-start}
+  .pc-stats{grid-template-columns:1fr;gap:10px}
+
+  /* naslovi: manjši in tesneje vodeni, da se ne lomijo čudno */
+  .hero h1{font-size:2.05rem;line-height:1.16;hyphens:none}
+  .hero-sub{font-size:16px;margin-top:18px;line-height:1.6}
+  .hero-grid{gap:40px;padding:52px 0}
+  .hero-trust{gap:10px 20px;font-size:13px;margin-top:28px}
+  .section h2{font-size:1.85rem;line-height:1.18}
+  .section{padding:60px 0}
+  .section-intro .lead{font-size:16px;margin-top:16px}
+  .card h3,.role-card h3,.step h3{font-size:21px}
+  .card p,.role-card ul,.step p{font-size:15px}
+  .final-cta p{font-size:16px}
+  .form-hero h1{font-size:1.95rem;line-height:1.18}
+  .form-hero p{font-size:16px}
+  .form-card h2{font-size:23px}
+  .eyebrow{font-size:10px;letter-spacing:.2em}
+
+  /* gumbi: polna širina, lažji dotik */
+  .hero-cta{flex-direction:column;gap:12px}
+  .hero-cta .btn,.final-cta .btn{width:100%;padding:15px 20px}
+  .nav .btn{padding:9px 12px;font-size:12px}
+  .brand-main{font-size:22px}
+  .brand-sub{font-size:9px;letter-spacing:.2em}
+
+  /* video sličice: več prostora za besedilo */
+  .vt-title{font-size:15px}
+  .vt-sub{font-size:12px}
+
+  /* storitve */
+  .svc-row{padding:20px}
+  .svc-row h3{font-size:19px}
+  .svc-row p{font-size:15px}
+}
+@media(max-width:400px){
+  .hero h1{font-size:1.8rem}
+  .section h2{font-size:1.65rem}
+  .container{padding:0 16px}
+}
+
 @media(max-width:560px){.lightbox-close{top:-50px;right:0}}
 @keyframes cardPulse{
   0%{box-shadow:0 30px 60px -25px rgba(22,32,64,.35),0 0 0 0 rgba(180,148,72,.55)}
@@ -211,7 +259,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none}
 @media(max-width:560px){.field-row{grid-template-columns:1fr}}
 label{display:block;font-size:14px;font-weight:800;margin-bottom:6px}
 .field{width:100%;border:1.5px solid var(--line2);border-radius:10px;padding:12px 16px;background:#fff;
-  transition:.2s;font-size:15px;font-family:inherit;color:var(--navy)}
+  transition:.2s;font-size:16px;font-family:inherit;color:var(--navy)}
 .field:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(180,148,72,.15)}
 .field.err{border-color:#c0392b}
 textarea.field{resize:vertical}
